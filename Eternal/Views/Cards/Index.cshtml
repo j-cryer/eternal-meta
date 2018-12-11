@@ -1,0 +1,97 @@
+﻿@model CardIndexData
+
+@{
+    ViewData["Title"] = "Card Browser";
+}
+
+<div class="jumbotron col-md-10 col-xs-12 col-md-offset-1">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="well">
+
+                <form asp-action="Index" method="get" name="card-filters">
+                    <div class="form-horizontal">
+
+                        <!-- search filter -->
+                        <div class="form-group">
+                            <div class="col-md-12 col-xs-12">
+                                <label>Search for a card</label>
+                                <input name="searchFilter" class="form-control" value="@Model.SearchFilter" />
+                            </div>
+                        </div>
+
+                        <!-- factions filter -->
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <p style="font-size:medium;border-bottom:1px solid black;"><strong>Factions</strong></p>
+                                <span><img id="Fire" class="faction-icon" src="~/images/icons/factions/fire-icon.png" /></span>
+                                <span><img id="Time" class="faction-icon" src="~/images/icons/factions/time-icon.png" /></span>
+                                <span><img id="Justice" class="faction-icon" src="~/images/icons/factions/justice-icon.png" /></span>
+                                <span><img id="Primal" class="faction-icon" src="~/images/icons/factions/primal-icon.png" /></span>
+                                <span><img id="Shadow" class="faction-icon" src="~/images/icons/factions/shadow-icon.png" /></span>
+                                <span><img id="Multifaction" class="faction-icon" src="~/images/icons/factions/multifaction-icon.png" /></span>
+                                <span><img id="Factionless" class="faction-icon" src="~/images/icons/factions/factionless-icon.png" /></span>
+                                <input name="factionFilter" value="@Model.FactionFilter" hidden />
+                            </div>
+                        </div>
+
+                        <!-- cost filter -->
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <p style="font-size:medium;border-bottom:1px solid black;"><strong>Power</strong></p>
+                                <span><img id="0" class="power-icon" src="~/images/icons/power/0.png" /></span>
+                                <span><img id="1" class="power-icon" src="~/images/icons/power/1.png" /></span>
+                                <span><img id="2" class="power-icon" src="~/images/icons/power/2.png" /></span>
+                                <span><img id="3" class="power-icon" src="~/images/icons/power/3.png" /></span>
+                                <span><img id="4" class="power-icon" src="~/images/icons/power/4.png" /></span>
+                                <span><img id="5" class="power-icon" src="~/images/icons/power/5.png" /></span>
+                                <span><img id="6" class="power-icon" src="~/images/icons/power/6.png" /></span>
+                                <span><img id="7" class="power-icon" src="~/images/icons/power/7.png" /></span>
+                                <input name="costFilter" value="@Model.CostFilter" hidden />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input class="btn btn-primary" type="submit" value="Apply Filters" /> |
+                                <a style="display:inline-block;" href="#" id="reset-filter-link">Reset Filters</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true"
+                 page-class="btn" page-class-normal="btn-default" page-class-selected="btn-primary"
+                 page-url-searchFilter="@Model.SearchFilter"
+                 page-url-factionFilter="@Model.FactionFilter"
+                 page-url-costFilter="@Model.CostFilter">
+            </div>
+
+            <div class="row">
+                @foreach (var card in Model.Cards)
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="padding:2px;">
+                        <a class="card-link" href="@Url.Action("Details", "Cards", new { id = card.CardID })">
+                            <img class="card-image img-responsive" src="@Url.Content(card.ImageUrl)" />
+                        </a>
+                    </div>
+                }
+            </div>
+
+            <div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true"
+                 page-class="btn" page-class-normal="btn-default" page-class-selected="btn-primary"
+                 page-url-searchFilter="@Model.SearchFilter"
+                 page-url-factionFilter="@Model.FactionFilter"
+                 page-url-costFilter="@Model.CostFilter">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/CardCollectionFiltersController.js"></script>
+}

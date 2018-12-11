@@ -1,0 +1,43 @@
+﻿@model CardIndexData
+
+<div class="collection-vm">
+
+    @{
+        var prevDisabled = Model.PagingInfo.CurrentPage == 1 ? "disabled" : "";
+        var nextDisabled = Model.PagingInfo.CurrentPage == Model.PagingInfo.TotalPages ? "disabled" : "";
+    }
+
+    <button style="float:left;" class="btn btn-primary" 
+            onclick="changePage(@(Model.PagingInfo.CurrentPage - 1), '@Model.SearchFilter', '@Model.FactionFilter', '@Model.CostFilter')" @prevDisabled>
+        Previous
+    </button>
+
+    <button style="float:right;" class="btn btn-primary"
+            onclick="changePage(@(Model.PagingInfo.CurrentPage + 1), '@Model.SearchFilter', '@Model.FactionFilter', '@Model.CostFilter')" @nextDisabled>
+        Next
+    </button>
+
+    <br />
+
+    <div class="collection">
+        <div class="row">
+            @foreach (var card in Model.Cards)
+            {
+                <div class="col-md-3 col-xs-3">
+                    <button class="card-image-button"
+                            id="@card.CardID"
+                            data-name="@card.Name"
+                            data-factions="@card.Factions"
+                            data-cost="@card.Cost"
+                            data-type="@card.Type"
+                            data-rarity="@card.Rarity"
+                            onclick="addCard(this)">
+
+                        <img class="card-image img-responsive" src="@Url.Content(card.ImageUrl)" />
+
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

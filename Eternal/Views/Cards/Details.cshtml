@@ -1,0 +1,89 @@
+﻿@model CardDetails
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="jumbotron col-md-10 col-xs-12 col-md-offset-1">
+
+    <center>
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <img class="card-details-image img-responsive" src="@Url.Content(Model.ImageUrl)" />
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    switch (Model.UserRating)
+                    {
+                        case 0:
+                            <p>
+                                <span id="likes">@Model.Rating</span>
+                                <button class="rating-button btn btn-default btn-sm" id="like-card" onclick="rateCard(@Model.CardID, 1)">+1</button>
+                            </p>
+                            break;
+
+                        case 1:
+                            <p>
+                                <span id="likes">@Model.Rating</span>
+                                <button class="rating-button btn btn-default btn-sm" id="like-card" style="background-color:green;" onclick="rateCard(@Model.CardID, 1)">+1</button>
+                            </p>
+                            break;
+                    }
+                }
+                else
+                {
+                    <p>
+                        <span id="likes">@Model.Rating</span>
+                        <button class="rating-button btn btn-default btn-sm" id="like-card" onclick="redirectToLogin()">+1</button>
+                    </p>
+                }
+            </div>
+
+            <div class="col-md-6 col-xs-12">
+                <div class="well well-sm">
+                    <h2>@Model.Name</h2>
+                    <hr />
+                    <p><strong>Text:</strong> @Model.Text</p>
+                    <br />
+                    <p><strong>Type:</strong> @Model.Type</p>
+                    <br />
+                    <p><strong>Rarity:</strong> @Model.Rarity</p>
+                    <br />
+                    <p><strong>Set:</strong> @Model.Set</p>
+
+                    @{
+                        var hidden = Model.RelatedCards.Any() ? "" : "hidden";
+                    }
+
+                    <div class="row" @hidden>
+                        <div class="col-md-12 col-xs-12">
+                            <h3>Related</h3>
+                            <hr />
+                            @foreach (var card in Model.RelatedCards)
+                            {
+                                <div class="col-md-4 col-xs-4">
+                                    <a class="card-link" href="@Url.Action("Details", "Cards", new { id = card.CardID })">
+                                        <img class="related-card-image img-responsive" src="@Url.Content(card.ImageUrl)" />
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </center>
+
+    <div class="well well-sm">
+        <div id="@Model.CardID" class="comments-vm-container">
+            @await Component.InvokeAsync("CardComments", new { id = Model.CardID })
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script src="~/js/CardDetailsController.js"></script>
+}
